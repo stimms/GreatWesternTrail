@@ -50,6 +50,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .app-shell {
   position: relative;
   width: min(1180px, calc(100% - 28px));
@@ -241,6 +246,12 @@ input:focus {
   background: linear-gradient(180deg, var(--sage), #46513e);
 }
 
+.score-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
 .line-title {
   display: grid;
   gap: 2px;
@@ -273,6 +284,62 @@ input:focus {
   display: none;
 }
 
+.history-panel {
+  margin-top: 18px;
+}
+
+.history-heading {
+  align-items: center;
+}
+
+.history-list {
+  display: grid;
+  gap: 10px;
+}
+
+.history-empty {
+  margin: 0;
+  color: var(--muted);
+}
+
+.history-item {
+  display: grid;
+  grid-template-columns: minmax(145px, 0.7fr) minmax(180px, 1fr) minmax(220px, 1.2fr);
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(255, 250, 238, 0.64);
+}
+
+.history-item time {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.history-item strong {
+  color: var(--rail-dark);
+}
+
+.history-scores {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.history-scores span {
+  border: 1px solid rgba(77, 48, 34, 0.18);
+  border-radius: 6px;
+  padding: 4px 7px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 800;
+  background: rgba(234, 216, 184, 0.42);
+}
+
 @media (max-width: 760px) {
   .app-shell {
     width: min(100% - 18px, 1180px);
@@ -294,6 +361,10 @@ input:focus {
   .secondary-button,
   .ghost-button {
     width: 100%;
+  }
+
+  .score-actions {
+    display: block;
   }
 
   .panel,
@@ -391,5 +462,14 @@ input:focus {
 
   .marker-control {
     min-height: 38px;
+  }
+
+  .history-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .history-scores {
+    justify-content: flex-start;
   }
 }

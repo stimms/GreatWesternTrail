@@ -24,6 +24,7 @@ const scoreLines = [
 ];
 
 const storageKey = "gwt-scorer-state";
+const historyStorageKey = "gwt-game-history";
 const playerInputs = document.querySelector("#player-inputs");
 const playerForm = document.querySelector("#player-form");
 const setupPanel = document.querySelector("#setup-panel");
@@ -32,11 +33,15 @@ const scoreHead = document.querySelector("#score-head");
 const scoreBody = document.querySelector("#score-body");
 const scoreFoot = document.querySelector("#score-foot");
 const editPlayersButton = document.querySelector("#edit-players");
+const recordGameButton = document.querySelector("#record-game");
 const resetButton = document.querySelector("#reset-app");
+const historyList = document.querySelector("#history-list");
+const clearHistoryButton = document.querySelector("#clear-history");
 
 let players = [];
 let scores = {};
 let roundMarkerPlayer = "";
+let gameHistory = [];
 
 function readState() {
   try {
@@ -48,6 +53,19 @@ function readState() {
 
 function saveState() {
   localStorage.setItem(storageKey, JSON.stringify({ players, scores, roundMarkerPlayer }));
+}
+
+function readHistory() {
+  try {
+    const savedHistory = JSON.parse(localStorage.getItem(historyStorageKey));
+    return Array.isArray(savedHistory) ? savedHistory : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory() {
+  localStorage.setItem(historyStorageKey, JSON.stringify(gameHistory));
 }
 
 function numericValue(value) {
@@ -214,6 +232,128 @@ function renderTotals() {
   });
 }
 
+function getRecordedPlayers() {
+  return players.map((player) => ({
+    id: player.id,
+    name: player.name,
+    total: getPlayerTotal(player.id),
+  }));
+}
+
+function getWinner(recordedPlayers) {
+  const highestScore = Math.max(...recordedPlayers.map((player) => player.total));
+  const winners = recordedPlayers.filter((player) => player.total === highestScore);
+
+  if (winners.length > 1) {
+    return { names: winners.map((player) => player.name), total: highestScore, margin: 0, tied: true };
+  }
+
+  const runnerUpTotal = Math.max(
+    ...recordedPlayers.filter((player) => player.id !== winners[0].id).map((player) => player.total),
+    0,
+  );
+
+  return {
+    names: [winners[0].name],
+    total: highestScore,
+    margin: highestScore - runnerUpTotal,
+    tied: false,
+  };
+}
+
+function getMelissaSummary(recordedPlayers) {
+  const melissa = recordedPlayers.find((player) => player.name.trim().toLowerCase() === "melissa");
+  const simon = recordedPlayers.find((player) => player.name.trim().toLowerCase() === "simon");
+
+  if (!melissa || !simon) {
+    return "";
+  }
+
+  const margin = melissa.total - simon.total;
+
+  if (margin > 0) {
+    return `Melissa beat Simon by ${margin}.`;
+  }
+
+  if (margin < 0) {
+    return `Simon beat Melissa by ${Math.abs(margin)}.`;
+  }
+
+  return "Melissa and Simon tied.";
+}
+
+function getWinnerSummary(game) {
+  if (game.winner.tied) {
+    return `${game.winner.names.join(" and ")} tied at ${game.winner.total}.`;
+  }
+
+  return `${game.winner.names[0]} won by ${game.winner.margin}.`;
+}
+
+function formatGameDate(playedAt) {
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(playedAt));
+}
+
+function renderHistory() {
+  historyList.innerHTML = "";
+  clearHistoryButton.disabled = gameHistory.length === 0;
+
+  if (gameHistory.length === 0) {
+    const emptyState = document.createElement("p");
+    emptyState.className = "history-empty";
+    emptyState.textContent = "No recorded games yet.";
+    historyList.append(emptyState);
+    return;
+  }
+
+  gameHistory.forEach((game) => {
+    const article = document.createElement("article");
+    article.className = "history-item";
+
+    const date = document.createElement("time");
+    date.dateTime = game.playedAt;
+    date.textContent = formatGameDate(game.playedAt);
+
+    const summary = document.createElement("strong");
+    summary.textContent = game.melissaSummary || getWinnerSummary(game);
+
+    const scoresList = document.createElement("div");
+    scoresList.className = "history-scores";
+
+    game.players
+      .slice()
+      .sort((left, right) => right.total - left.total)
+      .forEach((player) => {
+        const score = document.createElement("span");
+        score.textContent = `${player.name}: ${player.total}`;
+        scoresList.append(score);
+      });
+
+    article.append(date, summary, scoresList);
+    historyList.append(article);
+  });
+}
+
+function recordGame() {
+  if (players.length === 0) return;
+
+  const recordedPlayers = getRecordedPlayers();
+  const game = {
+    id: crypto.randomUUID ? crypto.randomUUID() : `game-${Date.now()}`,
+    playedAt: new Date().toISOString(),
+    players: recordedPlayers,
+    winner: getWinner(recordedPlayers),
+    melissaSummary: getMelissaSummary(recordedPlayers),
+  };
+
+  gameHistory = [game, ...gameHistory].slice(0, 50);
+  saveHistory();
+  renderHistory();
+}
+
 playerForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const formData = new FormData(playerForm);
@@ -236,6 +376,14 @@ editPlayersButton.addEventListener("click", () => {
   setupPanel.classList.remove("hidden");
 });
 
+recordGameButton.addEventListener("click", recordGame);
+
+clearHistoryButton.addEventListener("click", () => {
+  gameHistory = [];
+  saveHistory();
+  renderHistory();
+});
+
 resetButton.addEventListener("click", () => {
   players = [];
   scores = {};
@@ -250,7 +398,9 @@ const savedState = readState();
 players = Array.isArray(savedState.players) ? savedState.players : [];
 scores = savedState.scores || {};
 roundMarkerPlayer = savedState.roundMarkerPlayer || "";
+gameHistory = readHistory();
 createPlayerInputs(players);
+renderHistory();
 
 if (players.length > 0) {
   startScoring(players);
