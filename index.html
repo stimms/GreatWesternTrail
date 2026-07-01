@@ -4,7 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Great Western Trail Scorer</title>
-    <link rel="icon" href="data:," />
+    <meta name="theme-color" content="#7b5135" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="GWT Scorer" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="assets/icon-192.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -64,6 +70,16 @@
 
         <div class="history-list" id="history-list"></div>
       </section>
+
+      <aside class="install-prompt hidden" id="install-prompt" aria-label="Install app">
+        <img src="assets/icon-192.png" alt="" />
+        <div>
+          <strong>Install the scorer</strong>
+          <span id="install-message">Keep it on your home screen for game night.</span>
+        </div>
+        <button class="primary-button" id="install-app" type="button">Install</button>
+        <button class="icon-button" id="dismiss-install" type="button" aria-label="Dismiss install prompt">X</button>
+      </aside>
     </main>
 
     <script src="app.js"></script>

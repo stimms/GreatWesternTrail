@@ -37,11 +37,16 @@ const recordGameButton = document.querySelector("#record-game");
 const resetButton = document.querySelector("#reset-app");
 const historyList = document.querySelector("#history-list");
 const clearHistoryButton = document.querySelector("#clear-history");
+const installPrompt = document.querySelector("#install-prompt");
+const installMessage = document.querySelector("#install-message");
+const installAppButton = document.querySelector("#install-app");
+const dismissInstallButton = document.querySelector("#dismiss-install");
 
 let players = [];
 let scores = {};
 let roundMarkerPlayer = "";
 let gameHistory = [];
+let deferredInstallPrompt = null;
 
 function readState() {
   try {
@@ -66,6 +71,43 @@ function readHistory() {
 
 function saveHistory() {
   localStorage.setItem(historyStorageKey, JSON.stringify(gameHistory));
+}
+
+function isStandaloneApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function isInstallDismissed() {
+  return localStorage.getItem("gwt-install-dismissed") === "true";
+}
+
+function isLikelyMobile() {
+  return window.matchMedia("(max-width: 760px), (pointer: coarse)").matches;
+}
+
+function isIosDevice() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function showInstallPrompt() {
+  if (!installPrompt || isStandaloneApp() || isInstallDismissed() || !isLikelyMobile()) {
+    return;
+  }
+
+  if (!deferredInstallPrompt && !isIosDevice()) {
+    return;
+  }
+
+  if (installMessage && installAppButton && isIosDevice() && !deferredInstallPrompt) {
+    installMessage.textContent = "Use Share, then Add to Home Screen.";
+    installAppButton.textContent = "Got it";
+  }
+
+  installPrompt.classList.remove("hidden");
+}
+
+function hideInstallPrompt() {
+  installPrompt?.classList.add("hidden");
 }
 
 function numericValue(value) {
@@ -383,6 +425,45 @@ clearHistoryButton.addEventListener("click", () => {
   saveHistory();
   renderHistory();
 });
+
+installAppButton.addEventListener("click", async () => {
+  if (!deferredInstallPrompt) {
+    localStorage.setItem("gwt-install-dismissed", "true");
+    hideInstallPrompt();
+    return;
+  }
+
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  hideInstallPrompt();
+});
+
+dismissInstallButton.addEventListener("click", () => {
+  localStorage.setItem("gwt-install-dismissed", "true");
+  hideInstallPrompt();
+});
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  showInstallPrompt();
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  hideInstallPrompt();
+});
+
+window.addEventListener("load", () => {
+  window.setTimeout(showInstallPrompt, 1200);
+});
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js");
+  });
+}
 
 resetButton.addEventListener("click", () => {
   players = [];

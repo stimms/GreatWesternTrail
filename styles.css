@@ -167,7 +167,8 @@ input:focus {
 
 .primary-button,
 .secondary-button,
-.ghost-button {
+.ghost-button,
+.icon-button {
   min-height: 42px;
   border-radius: 6px;
   padding: 8px 14px;
@@ -186,6 +187,16 @@ input:focus {
   border: 1px solid rgba(77, 48, 34, 0.34);
   color: var(--rail-dark);
   background: rgba(255, 250, 238, 0.7);
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  min-width: 42px;
+  padding: 8px;
+  border: 1px solid rgba(77, 48, 34, 0.34);
+  color: var(--rail-dark);
+  background: rgba(255, 250, 238, 0.82);
 }
 
 .scoreboard-header {
@@ -340,6 +351,52 @@ input:focus {
   background: rgba(234, 216, 184, 0.42);
 }
 
+.install-prompt {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  max-width: 680px;
+  margin: 0 auto;
+  border: 1px solid rgba(77, 48, 34, 0.32);
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 18px 45px rgba(43, 33, 25, 0.3);
+  background:
+    linear-gradient(rgba(244, 234, 214, 0.98), rgba(244, 234, 214, 0.98)),
+    repeating-linear-gradient(90deg, rgba(77, 48, 34, 0.05) 0 1px, transparent 1px 18px);
+}
+
+.install-prompt.hidden {
+  display: none;
+}
+
+.install-prompt img {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+}
+
+.install-prompt div {
+  display: grid;
+  gap: 2px;
+}
+
+.install-prompt strong {
+  color: var(--rail-dark);
+}
+
+.install-prompt span {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
 @media (max-width: 760px) {
   .app-shell {
     width: min(100% - 18px, 1180px);
@@ -471,5 +528,25 @@ input:focus {
 
   .history-scores {
     justify-content: flex-start;
+  }
+
+  .install-prompt {
+    grid-template-columns: 48px minmax(0, 1fr) 42px;
+    padding: 10px;
+  }
+
+  .install-prompt img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .install-prompt .primary-button {
+    grid-column: 1 / -1;
+    order: 2;
+  }
+
+  .install-prompt .icon-button {
+    grid-column: 3;
+    grid-row: 1;
   }
 }
