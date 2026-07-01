@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Great Western Trail Scorer</title>
+    <link rel="icon" href="data:," />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rye&family=Source+Sans+3:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="masthead" aria-labelledby="app-title">
+        <div>
+          <p class="eyebrow">Trail-end scoring</p>
+          <h1 id="app-title">Great Western Trail Scorer</h1>
+        </div>
+        <button class="ghost-button" id="reset-app" type="button">Reset</button>
+      </section>
+
+      <section class="panel setup-panel" id="setup-panel" aria-labelledby="setup-title">
+        <div class="panel-heading">
+          <h2 id="setup-title">Players</h2>
+          <p>Add 1 to 4 cattle drivers.</p>
+        </div>
+
+        <form id="player-form" class="player-form">
+          <div class="player-grid" id="player-inputs"></div>
+          <button class="primary-button" type="submit">Start scoring</button>
+        </form>
+      </section>
+
+      <section class="scoreboard hidden" id="scoreboard" aria-labelledby="score-title">
+        <div class="scoreboard-header">
+          <div>
+            <p class="eyebrow">Final score sheet</p>
+            <h2 id="score-title">Count every last point</h2>
+          </div>
+          <button class="secondary-button" id="edit-players" type="button">Edit players</button>
+        </div>
+
+        <div class="score-table-wrap">
+          <table class="score-table">
+            <thead id="score-head"></thead>
+            <tbody id="score-body"></tbody>
+            <tfoot id="score-foot"></tfoot>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
