@@ -108,7 +108,10 @@ function renderScoreboard() {
   players.forEach((player) => {
     const th = document.createElement("th");
     th.scope = "col";
-    th.textContent = player.name;
+    const label = document.createElement("span");
+    label.className = "player-heading";
+    label.textContent = player.name;
+    th.append(label);
     headerRow.append(th);
   });
 

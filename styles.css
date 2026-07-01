@@ -186,9 +186,9 @@ input:focus {
 .scoreboard-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 .score-table-wrap {
@@ -300,5 +300,96 @@ input:focus {
   .scoreboard,
   .masthead {
     padding: 16px;
+  }
+
+  .score-table-wrap {
+    overflow-x: visible;
+  }
+
+  .score-table {
+    table-layout: fixed;
+    min-width: 0;
+  }
+
+  .score-table th,
+  .score-table td {
+    padding: 8px 5px;
+  }
+
+  .score-table td:not(:first-child),
+  .score-table th:not(:first-child) {
+    width: auto;
+    text-align: center;
+  }
+
+  .score-table th:first-child,
+  .score-table td:first-child {
+    width: 38%;
+  }
+
+  .line-title {
+    min-width: 0;
+  }
+
+  .line-title strong {
+    font-size: 0.92rem;
+  }
+
+  .line-title span {
+    font-size: 0.76rem;
+    line-height: 1.15;
+  }
+
+  .score-table th {
+    overflow: hidden;
+    font-size: 0.78rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .score-table thead th {
+    height: 74px;
+    vertical-align: bottom;
+  }
+
+  .score-table thead th:first-child {
+    height: auto;
+  }
+
+  .player-heading {
+    display: inline-block;
+    max-width: 82px;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    transform: rotate(-45deg) translate(-4px, 7px);
+    transform-origin: left bottom;
+    white-space: nowrap;
+  }
+
+  .score-cell {
+    justify-items: center;
+  }
+
+  .score-label {
+    display: none;
+  }
+
+  .score-table input[type="number"] {
+    appearance: textfield;
+    min-height: 38px;
+    max-width: 48px;
+    padding: 6px;
+    text-align: center;
+  }
+
+  .score-table input[type="number"]::-webkit-inner-spin-button,
+  .score-table input[type="number"]::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+  }
+
+  .marker-control {
+    min-height: 38px;
   }
 }
