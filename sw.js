@@ -1,4 +1,4 @@
-const CACHE_NAME = "gwt-scorer-v1";
+const CACHE_NAME = "gwt-scorer-v2";
 const APP_ASSETS = [
   "./",
   "./index.html",

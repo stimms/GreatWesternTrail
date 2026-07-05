@@ -274,6 +274,16 @@ function renderTotals() {
   });
 }
 
+function clearActiveGame(savedPlayers = []) {
+  players = savedPlayers;
+  scores = {};
+  roundMarkerPlayer = "";
+  localStorage.removeItem(storageKey);
+  createPlayerInputs(savedPlayers);
+  scoreboard.classList.add("hidden");
+  setupPanel.classList.remove("hidden");
+}
+
 function getRecordedPlayers() {
   return players.map((player) => ({
     id: player.id,
@@ -394,6 +404,7 @@ function recordGame() {
   gameHistory = [game, ...gameHistory].slice(0, 50);
   saveHistory();
   renderHistory();
+  clearActiveGame(recordedPlayers);
 }
 
 playerForm.addEventListener("submit", (event) => {
@@ -466,13 +477,7 @@ if ("serviceWorker" in navigator) {
 }
 
 resetButton.addEventListener("click", () => {
-  players = [];
-  scores = {};
-  roundMarkerPlayer = "";
-  localStorage.removeItem(storageKey);
-  createPlayerInputs();
-  scoreboard.classList.add("hidden");
-  setupPanel.classList.remove("hidden");
+  clearActiveGame();
 });
 
 const savedState = readState();
