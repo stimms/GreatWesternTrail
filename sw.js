@@ -1,9 +1,9 @@
-const CACHE_NAME = "gwt-scorer-v2";
+const CACHE_NAME = "gwt-scorer-v3";
 const APP_ASSETS = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
+  "./styles.css?v=3",
+  "./app.js?v=3",
   "./manifest.webmanifest",
   "./assets/apple-touch-icon.png",
   "./assets/icon-192.png",

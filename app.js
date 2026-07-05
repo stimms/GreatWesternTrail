@@ -365,6 +365,17 @@ function renderHistory() {
     const article = document.createElement("article");
     article.className = "history-item";
 
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "history-delete";
+    deleteButton.type = "button";
+    deleteButton.textContent = "X";
+    deleteButton.setAttribute("aria-label", `Remove game from ${formatGameDate(game.playedAt)}`);
+    deleteButton.addEventListener("click", () => {
+      gameHistory = gameHistory.filter((savedGame) => savedGame.id !== game.id);
+      saveHistory();
+      renderHistory();
+    });
+
     const date = document.createElement("time");
     date.dateTime = game.playedAt;
     date.textContent = formatGameDate(game.playedAt);
@@ -384,7 +395,7 @@ function renderHistory() {
         scoresList.append(score);
       });
 
-    article.append(date, summary, scoresList);
+    article.append(deleteButton, date, summary, scoresList);
     historyList.append(article);
   });
 }

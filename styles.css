@@ -314,14 +314,38 @@ input:focus {
 }
 
 .history-item {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(145px, 0.7fr) minmax(180px, 1fr) minmax(220px, 1.2fr);
   align-items: center;
   gap: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 42px 12px 12px;
   background: rgba(255, 250, 238, 0.64);
+}
+
+.history-delete {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  min-height: 0;
+  border: 1px solid rgba(77, 48, 34, 0.24);
+  border-radius: 50%;
+  padding: 0;
+  color: var(--rail-dark);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+  background: rgba(255, 250, 238, 0.86);
+}
+
+.history-delete:focus {
+  outline: 3px solid rgba(191, 111, 61, 0.22);
 }
 
 .history-item time {
@@ -524,6 +548,7 @@ input:focus {
   .history-item {
     grid-template-columns: 1fr;
     gap: 6px;
+    padding-right: 42px;
   }
 
   .history-scores {
